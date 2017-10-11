@@ -32,6 +32,8 @@ public class FrontCompression {
      * @return the input compressed using front encoding
      */
     public static String compress(final String corpus) {
+        System.out.println("Compress Input:");
+        System.out.println(corpus);
         /*
          * Defend against bad inputs.
          */
@@ -40,12 +42,25 @@ public class FrontCompression {
         } else if (corpus.length() == 0) {
             return "";
         }
-
-        /*
-         * Complete this function.
-         */
-
-        return "";
+        int curPrefixLength = 0;
+        String compressedWord = "";
+        Scanner wordScanner = new Scanner(corpus);
+        String lastWord = wordScanner.nextLine();
+        String curWord = "";
+        String compressedStr = lastWord;
+        while (wordScanner.hasNextLine()) {
+            compressedStr += "\n";
+            curWord = wordScanner.nextLine();
+            curPrefixLength = longestPrefix(curWord, lastWord);
+            compressedWord = curPrefixLength + " "
+            + curWord.substring(curPrefixLength, curWord.length());
+            compressedStr += compressedWord;
+            lastWord = curWord;
+        }
+        wordScanner.close();
+        System.out.println("Compress Output:");
+        System.out.println(compressedStr);
+        return compressedStr;
     }
 
     /**
@@ -55,6 +70,8 @@ public class FrontCompression {
      * @return the input decompressed using front encoding
      */
     public static String decompress(final String corpus) {
+        System.out.println("Decompress Input:");
+        System.out.println(corpus);
         /*
          * Defend against bad inputs.
          */
@@ -63,12 +80,29 @@ public class FrontCompression {
         } else if (corpus.length() == 0) {
             return "";
         }
-
-        /*
-         * Complete this function.
-         */
-
-        return "";
+        int prefixLength = 0;
+        String prefix = "";
+        String body = "";
+        Scanner wordScanner = new Scanner(corpus);
+        String decompressedStr = "";
+        String curWord = "";
+        String lastWord = wordScanner.nextLine();
+        decompressedStr += lastWord;
+        String decompressedWord = "";
+        while (wordScanner.hasNext()) {
+            decompressedStr += "\n";
+            curWord = wordScanner.nextLine();
+            prefixLength = Integer.parseInt(curWord.substring(0, curWord.indexOf(' ')));
+            prefix = lastWord.substring(0, prefixLength);
+            body = curWord.substring(curWord.indexOf(' ') + 1, curWord.length());
+            decompressedWord = prefix + body;
+            decompressedStr += decompressedWord;
+            lastWord = decompressedWord;
+        }
+        wordScanner.close();
+        System.out.println("Decompress Output:");
+        System.out.println(decompressedStr);
+        return decompressedStr;
     }
 
     /**
@@ -79,10 +113,21 @@ public class FrontCompression {
      * @return the length of the common prefix between the two strings
      */
     private static int longestPrefix(final String firstString, final String secondString) {
-        /*
-         * Complete this function.
-         */
-        return 0;
+        int prefixLength = 0;
+        int shortWordLength = 0;
+        if (firstString.length() < secondString.length()) {
+            shortWordLength = firstString.length();
+        } else {
+            shortWordLength = secondString.length();
+        }
+        for (int index = 0; index < shortWordLength; index++) {
+            if (firstString.charAt(index) == secondString.charAt(index)) {
+                prefixLength++;
+            } else {
+                break;
+            }
+        }
+        return prefixLength;
     }
 
     /**
